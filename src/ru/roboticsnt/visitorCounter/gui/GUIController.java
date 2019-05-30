@@ -1,7 +1,12 @@
 package ru.roboticsnt.visitorCounter.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,6 +51,15 @@ public class GUIController
     @FXML
     Button startBut;
 
+    @FXML
+    Button resetBut;
+
+    @FXML
+    Slider thresholdSlider;
+
+    @FXML
+    Slider minDistanceSlider;
+
 
     public void init(Counter counter, CameraController cameraController)
     {
@@ -55,17 +69,37 @@ public class GUIController
         leavingCountTf.setText("0");
         incomingCountTf.setText("0");
 
+        thresholdSlider.setValue(_counter.getConfidenceThreshold());
+        minDistanceSlider.setValue(_counter.getMinDistanceBetweenPeoples());
+
         startBut.setOnAction(actionEvent ->
         {
             if(_cameraController.isStarted())
             {
                 _cameraController.stop();
-                startBut.setText("START");
+                startBut.setText("Старт");
             }else
             {
                 _cameraController.start();
-                startBut.setText("STOP");
+                startBut.setText("Стоп");
             }
+        });
+
+        resetBut.setOnAction(actionEvent ->
+        {
+            _counter.reset();
+        });
+
+        thresholdSlider.valueProperty().addListener((observableValue, number, t1) ->
+        {
+            System.out.println(thresholdSlider.getValue());
+            _counter.setConfidenceThreshold(thresholdSlider.getValue());
+        });
+
+        minDistanceSlider.valueProperty().addListener((observableValue, number, t1) ->
+        {
+            System.out.println(minDistanceSlider.getValue());
+            _counter.setMinDistanceBetweenPeoples(minDistanceSlider.getValue());
         });
     }
 
@@ -106,6 +140,13 @@ public class GUIController
             matOfPointList.add(matOfPoint);
             Imgproc.polylines(frame, matOfPointList, false, drawColor, _LINE_THICKNESS);
         }
+
+        // Draw counter values on frame
+        Point incomingTextPosition = new Point(frameSize * 0.2, frameSize * 0.7);
+        Imgproc.putText(frame, Integer.toString(_counter.getIncomingCount()), incomingTextPosition, Imgproc.FONT_HERSHEY_PLAIN, 25, _DIVIDING_LINE_COLOR, 6);
+        Point leavingTextPosition = new Point(frameSize * 0.7, frameSize * 0.7);
+        Imgproc.putText(frame, Integer.toString(_counter.getLeavingCount()), leavingTextPosition, Imgproc.FONT_HERSHEY_PLAIN, 25, _DIVIDING_LINE_COLOR, 6);
+
 
         // Show peoples count
         incomingCountTf.setText(Integer.toString(_counter.getIncomingCount()));

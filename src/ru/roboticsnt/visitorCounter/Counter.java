@@ -15,22 +15,28 @@ public class Counter
 
     private int _leavingCount;
 
-    private final double _MIN_DISTANCE_BETWEEN_PEOPLE = 0.1;
-
-    private final double _CONFIDENCE_THRESHOLD = 0.7;
+    private double _minDistanceBetweenPeoples = 0.3;
+    private double _confidenceThreshold = 0.2;
 
     private final int _PEOPLE_CLASS_ID = 15;
 
-    private final int _MAX_FRAMES_WITHOUT_DETECTION = 5;
+    private final int _MAX_FRAMES_WITHOUT_DETECTION = 12;
 
 
     public Counter()
+    {
+        reset();
+    }
+
+
+    public void reset()
     {
         _peoplesList = new ArrayList<>();
 
         _incomingCount = 0;
         _leavingCount = 0;
     }
+
 
 
     public ArrayList<People> getPeoplesList()
@@ -51,6 +57,30 @@ public class Counter
     }
 
 
+    public double getMinDistanceBetweenPeoples()
+    {
+        return _minDistanceBetweenPeoples;
+    }
+
+
+    public void setMinDistanceBetweenPeoples(double value)
+    {
+        _minDistanceBetweenPeoples = value;
+    }
+
+
+    public double getConfidenceThreshold()
+    {
+        return _confidenceThreshold;
+    }
+
+
+    public void setConfidenceThreshold(double value)
+    {
+        _confidenceThreshold = value;
+    }
+
+
     public void update(Mat result)
     {
 
@@ -60,7 +90,7 @@ public class Counter
             int classId = (int)result.get(i, 1)[0];
 
             // Если определился не человек или не прошел по порогу уверенности, то пропускаем
-            if(classId != _PEOPLE_CLASS_ID || confidence < _CONFIDENCE_THRESHOLD)
+            if(classId != _PEOPLE_CLASS_ID || confidence < _confidenceThreshold)
             {
                 continue;
             }
@@ -84,7 +114,9 @@ public class Counter
 
                 double distance = distanceBetweenPoints(peopleCenter, centerPoint);
 
-                if (distance < _MIN_DISTANCE_BETWEEN_PEOPLE)
+//                System.out.println("Dist: " + distance);
+
+                if (distance < _minDistanceBetweenPeoples)
                 {
                     people.update(leftTopPoint, rightBottomPoint);
                     isNewPeople = false;
