@@ -104,7 +104,6 @@ public class CameraController
     public void stop()
     {
         _isStarted = false;
-
         _camera.release();
         _net = null;
         _camera = null;

@@ -6,19 +6,21 @@ import org.opencv.core.Scalar;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class People
 {
-
-//    public static final int TYPE_INCOMING = 0;
-//    public static final int TYPE_LEAVING = 1;
+    public static final int TYPE_INCOMING = 0;
+    public static final int TYPE_LEAVING = 1;
 
     private static final int _MAX_PATH_SIZE = 20;
 
+    private int _type;
     private int _id;
-    Scalar _color;
-    Point _leftTopPoint;
-    Point _rightBottomPoint;
-//    Point _center;
+    private Scalar _color;
+    private Point _leftTopPoint;
+    private Point _rightBottomPoint;
+
+//    private boolean _isCounted = false;
 
     private ArrayList<Point> _pathPointsList;
 
@@ -51,6 +53,17 @@ public class People
         _pathPointsList = new ArrayList<>();
 
         update(leftTopPoint, rightBottomPoint);
+
+        Point center = getCenter();
+
+        if(center.x < 0.5)
+        {
+            _type = TYPE_INCOMING;
+        }else
+        {
+            _type = TYPE_LEAVING;
+        }
+
     }
 
 
@@ -77,10 +90,28 @@ public class People
     }
 
 
-    public int getFramesWithoutDetection()
+    public int getFramesWithoutDetectionCount()
     {
         return _framesWithoutDetection;
     }
+
+
+    public int getType()
+    {
+        return _type;
+    }
+
+
+//    public void setCounted(boolean value)
+//    {
+//        _isCounted = value;
+//    }
+//
+//
+//    public boolean isCounted()
+//    {
+//        return _isCounted;
+//    }
 
 
     public int getId()
@@ -110,7 +141,6 @@ public class People
     public Point getCenter()
     {
         return _pathPointsList.get(_pathPointsList.size() - 1);
-//        return _center;
     }
 
 

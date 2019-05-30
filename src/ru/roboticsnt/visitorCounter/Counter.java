@@ -114,22 +114,32 @@ public class Counter
             {
                 Point curCenter = people.getCenter();
 
-                if(curCenter.x > 0.5 && prevCenter.x < 0.5)
+                if(curCenter.x > 0.5 && prevCenter.x <= 0.5)
                 {
-                    System.out.println("INCOMING");
-                    _incomingCount++;
+                    if(people.getType() == People.TYPE_INCOMING)
+                    {
+                        _incomingCount++;
+                    }else
+                    {
+                        _leavingCount--;
+                    }
                 }
 
-                if(curCenter.x < 0.5 && prevCenter.x > 0.5)
+                if(curCenter.x < 0.5 && prevCenter.x >= 0.5)
                 {
-                    System.out.println("LEAVING");
-                    _leavingCount++;
+                    if(people.getType() == People.TYPE_INCOMING)
+                    {
+                        _incomingCount--;
+                    }else
+                    {
+                        _leavingCount++;
+                    }
                 }
             }
 
             people.incrementFramesWithoutDetection();
 
-            if(people.getFramesWithoutDetection() >= _MAX_FRAMES_WITHOUT_DETECTION)
+            if(people.getFramesWithoutDetectionCount() >= _MAX_FRAMES_WITHOUT_DETECTION)
             {
                 _peoplesList.remove(people);
             }

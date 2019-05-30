@@ -73,6 +73,7 @@ public class GUIController
     public void update(Mat frame)
     {
         int frameSize = CameraController.FRAME_SIZE;
+
         ArrayList<People> peoplesList = _counter.getPeoplesList();
 
         for (People people : peoplesList)
