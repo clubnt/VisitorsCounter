@@ -25,7 +25,7 @@ public class GUIController
     private final int _FONT_SCALE = 3;
 
     private final Scalar _DIVIDING_LINE_COLOR = new Scalar(10, 10, 240);
-    private final int _DIVIDING_LINE_THICKNESS = 4;
+    private final int _DIVIDING_LINE_THICKNESS = 6;
 
     private Counter _counter;
     private CameraController _cameraController;
@@ -72,12 +72,11 @@ public class GUIController
 
     public void update(Mat frame)
     {
+        int frameSize = CameraController.FRAME_SIZE;
         ArrayList<People> peoplesList = _counter.getPeoplesList();
 
         for (People people : peoplesList)
         {
-            int frameSize = CameraController.FRAME_SIZE;
-
             Scalar drawColor = people.getColor();
 
             // Draw rectangle
@@ -93,23 +92,28 @@ public class GUIController
             Point textPosition = new Point(centerPoint.x + 10, centerPoint.y - 10);
             Imgproc.putText(frame, "ID:" + people.getId(), textPosition, Imgproc.FONT_HERSHEY_PLAIN, _FONT_SCALE, drawColor, _LINE_THICKNESS);
 
-            // Show peoples count
-            incomingCountTf.setText(Integer.toString(_counter.getIncomingCount()));
-            leavingCountTf.setText(Integer.toString(_counter.getLeavingCount()));
-
-            // Draw dividing line
-            Point p1 = new Point(frameSize / 2, 30);
-            Point p2 = new Point(frameSize / 2, frameSize - 30);
-            Imgproc.line(frame, p1, p2, _DIVIDING_LINE_COLOR, _DIVIDING_LINE_THICKNESS);
-
             // Draw people path
-//            ArrayList<Point> pointArrayList = people.getPathPointsList();
-//            MatOfPoint matOfPoint = new MatOfPoint();
-//            matOfPoint.fromList(pointArrayList);
-//            List<MatOfPoint> list = new ArrayList();
-//            list.add(matOfPoint);
-//            Imgproc.polylines(frame, list, true, drawColor, _LINE_THICKNESS);
+            ArrayList<Point> pointArrayList = people.getPathPointsList();
+            ArrayList<Point> pointArrayList2 = new ArrayList<>();
+            for (Point point : pointArrayList)
+            {
+                pointArrayList2.add(new Point(point.x * CameraController.FRAME_SIZE, point.y * CameraController.FRAME_SIZE));
+            }
+            MatOfPoint matOfPoint = new MatOfPoint();
+            matOfPoint.fromList(pointArrayList2);
+            List<MatOfPoint> matOfPointList = new ArrayList();
+            matOfPointList.add(matOfPoint);
+            Imgproc.polylines(frame, matOfPointList, false, drawColor, _LINE_THICKNESS);
         }
+
+        // Show peoples count
+        incomingCountTf.setText(Integer.toString(_counter.getIncomingCount()));
+        leavingCountTf.setText(Integer.toString(_counter.getLeavingCount()));
+
+        // Draw dividing line
+        Point p1 = new Point(frameSize / 2, 30);
+        Point p2 = new Point(frameSize / 2, frameSize - 30);
+        Imgproc.line(frame, p1, p2, _DIVIDING_LINE_COLOR, _DIVIDING_LINE_THICKNESS);
 
 
         showFrame(frame);
@@ -135,8 +139,8 @@ public class GUIController
             k = windowHeight/imgHeight;
         }
 
-        int newWidth = (int) (imgWidth * k);
-        int newHeight = (int) (imgHeight * k);
+        double newWidth = (int) (imgWidth * k);
+        double newHeight = (int) (imgHeight * k);
 
         // Сдвиг не работает пока в билдере нулевая привязка к краям контейнера
         double imageX = 0;

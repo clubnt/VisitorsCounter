@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<SplitPane dividerPositions="0.27389705882352944" prefHeight="343.0" prefWidth="546.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ru.roboticsnt.visitorCounter.gui.GUIController">
+<SplitPane dividerPositions="0.27389705882352944" prefHeight="343.0" prefWidth="546.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.roboticsnt.visitorCounter.gui.GUIController">
   <items>
     <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0">
          <children>

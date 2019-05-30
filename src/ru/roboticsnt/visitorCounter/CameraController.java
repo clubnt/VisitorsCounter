@@ -27,7 +27,7 @@ public class CameraController
     private Net _net;
     private String[] _objectClasses;
 
-    private final int _CAMERA_PATH = 0;
+    private final int _CAMERA_PATH = 1;
 
     private final int _CAMERA_FRAME_WIDTH = 1920;
     private final int _CAMERA_FRAME_HEIGHT = 1080;

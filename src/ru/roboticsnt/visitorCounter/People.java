@@ -9,10 +9,10 @@ import java.util.Random;
 public class People
 {
 
-    public static final int TYPE_INCOMING = 0;
-    public static final int TYPE_LEAVING = 1;
+//    public static final int TYPE_INCOMING = 0;
+//    public static final int TYPE_LEAVING = 1;
 
-    private static final int _MAX_PATH_SIZE = 6;
+    private static final int _MAX_PATH_SIZE = 20;
 
     private int _id;
     Scalar _color;

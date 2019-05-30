@@ -15,7 +15,7 @@ public class Counter
 
     private int _leavingCount;
 
-    private final double _MIN_DISTANCE_BETWEEN_PEOPLE = 0.05;
+    private final double _MIN_DISTANCE_BETWEEN_PEOPLE = 0.1;
 
     private final double _CONFIDENCE_THRESHOLD = 0.7;
 
@@ -76,18 +76,15 @@ public class Counter
 
             boolean isNewPeople = true;
 
-            for (int j = 0; j < _peoplesList.size(); j++)
+            for (People people : _peoplesList)
             {
-                People people = _peoplesList.get(j);
-
                 people.incrementFramesWithoutDetection();
 
                 Point peopleCenter = people.getCenter();
 
                 double distance = distanceBetweenPoints(peopleCenter, centerPoint);
-//                System.out.println("Distance : " + distance);
 
-                if(distance < _MIN_DISTANCE_BETWEEN_PEOPLE)
+                if (distance < _MIN_DISTANCE_BETWEEN_PEOPLE)
                 {
                     people.update(leftTopPoint, rightBottomPoint);
                     isNewPeople = false;
@@ -98,19 +95,15 @@ public class Counter
             if (isNewPeople)
             {
                 _peoplesList.add(new People(leftTopPoint, rightBottomPoint));
-//                System.out.println("Add new people");
-//                System.out.println("Peoples count = " + _peoplesList.size());
-//                System.out.println("===================");
             }
-
         }
 
-        removeOldPeoples();
-    }
+        /*
+        * Проходим по списку людей
+        *  - проверяем на пересечение с центральной линией
+        *  - удаляем из списка того кто не определялся больше чем _MAX_FRAMES_WITHOUT_DETECTION кадров
+        * */
 
-
-    private void removeOldPeoples()
-    {
         for (int j = 0; j < _peoplesList.size(); j++)
         {
             People people = _peoplesList.get(j);
@@ -134,8 +127,6 @@ public class Counter
                 }
             }
 
-
-
             people.incrementFramesWithoutDetection();
 
             if(people.getFramesWithoutDetection() >= _MAX_FRAMES_WITHOUT_DETECTION)
@@ -146,12 +137,10 @@ public class Counter
     }
 
 
-
     private double distanceBetweenPoints(Point p1, Point p2)
     {
         double xDiff = p1.x - p2.x;
         double yDiff = p1.y - p2.y;
-
         return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
     }
 
